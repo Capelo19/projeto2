@@ -47,4 +47,20 @@
           </div>
         </div>
       </div>
+      <div>
+        {{user}}
+      </div>
 </template>
+<script>
+import firebase from 'firebase'
+export default {
+  data(){
+    return{
+      user:''
+    }
+  },
+  mounted (){
+    this.user = firebase.auth().currentUser
+  }
+}
+</script>
