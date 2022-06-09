@@ -44,46 +44,46 @@
             <h5>Especial do dia e comidas populares <a href="#" class="link">View menu</a></h5>
         </div>
         <div class="itemBx">
-            <div class="box">
-                <img src="@/assets/img/item1.jpg">
+           
+                <div class="box" v-for="(prato, index) in compras" :key="index">
+                <div class="conteudocarrinho" >
+                    <img class="imagenscarrinho" :src="prato.strCategoryThumb" alt="" />
+                </div>                    
                 <div class="infoBx">
-                    <h4>Especial do Dia</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Velit sequi molestias error perferendis?</p>
-                    <h5>10.00€</h5>
-                    <a href="/carrinho">Comprar agora</a>
-                </div>
-            </div>
-            <div class="box">
-                <img src="@/assets/img/item2.jpg">
-                <div class="infoBx">
-                    <h4>Especial do Dia</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Velit sequi molestias error perferendis?</p>
-                    <h5>15.00€</h5>
-                    <a href="projeto3carrinho.html">Comprar agora</a>
-                </div> 
-            </div>
-            <div class="box">
-                <img src="@/assets/img/item3.jpg">
-                <div class="infoBx">
-                    <h4>Especial do Dia</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Velit sequi molestias error perferendis?</p>
-                    <h5>10.00€</h5>
-                    <a href="projeto3carrinho.html">Comprar agora</a>
-                </div>
-            </div>
-                <div class="box">
-                    <img src="@/assets/img/item4.jpg">
-                    <div class="infoBx">
-                        <h4>Especial do Dia</h4>
+                        <h4>{{prato.strCategory}}</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
                         Velit sequi molestias error perferendis?</p>
                         <h5>10.00€</h5>
-                        <a href="projeto3carrinho.html">Comprar agora</a>
+                        <router-link @click="insereCompras(prato)" to="/carrinho">Comprar agora</router-link> 
                     </div>
                 </div>
             </div>
     </section>
 </template>
+<script>
+import firebase from 'firebase'
+export default {
+  data(){
+    return{
+      user:'',
+      compras:""
+    }
+  },
+  mounted (){
+    this.user = firebase.auth().currentUser
+    this.axios.get("https://www.themealdb.com/api/json/v1/1/categories.php").then(res=>{
+        this.compras= res.data.categories
+    })
+    // firebase.database().ref('compras/'+this.user.uid).get().then((snapshot)=>{this.compras=snapshot.val()})
+  },
+  methods:{
+      insereCompras(res){
+          firebase.database().ref('/compras/'+this.user.uid+'/').push().set(res)
+          .then(()=>{
+              console.log("data sent")
+          })
+      }
+  }
+
+}
+</script>

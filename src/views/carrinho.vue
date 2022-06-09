@@ -35,9 +35,8 @@
           <div class="titulocarrinho">
             <p>O seu carrinho</p>
           </div>
-          <div class="conteudocarrinho">
-            <img class="imagenscarrinho" src="@/assets/img/item2.jpg" alt="" />
-            <img class="imagenscarrinho" src="@/assets/img/item3.jpg" alt="" />
+          <div class="conteudocarrinho" v-for="(prato, index) in compras" :key="index">
+            <img class="imagenscarrinho" :src="prato.strCategoryThumb" alt="" />
           </div>
           <div class="Preço">
             <p>Total:20€</p>
@@ -46,6 +45,9 @@
             <button class="botaocontinuarcarrinho">Continuar</button>
           </div>
         </div>
+      </div>
+            <div>
+        {{compras}}
       </div>
       <div>
         {{user}}
@@ -56,11 +58,13 @@ import firebase from 'firebase'
 export default {
   data(){
     return{
-      user:''
+      user:'',
+      compras:""
     }
   },
   mounted (){
     this.user = firebase.auth().currentUser
+    firebase.database().ref('/compras/'+this.user.uid).get().then((snapshot)=>{this.compras=snapshot.val()})
   }
 }
 </script>
